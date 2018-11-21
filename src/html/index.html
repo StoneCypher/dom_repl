@@ -1,0 +1,32 @@
+<!doctype html><html><head><script type="text/javascript">
+
+function make_repl({evaluator, t, h, r}) {
+
+  const uEval = evaluator || eval;
+  
+  // history
+  h = [t || ''];
+
+  // loop until blank input or cancel
+  // print last 10 reults
+
+  while (s = prompt(h.slice(-10).join('\n'))) {
+
+    // eval the input, coerce to string, push onto history
+    // TODO: JSON.stringify() or other pretty printing?
+
+    try {
+      r = uEval(s);
+    } catch (e) {
+      r = e;
+    }
+
+    h.push( JSON.stringify(r) );
+
+  }
+
+}
+
+make_repl({});
+
+</script></head><body></body></html>
