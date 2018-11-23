@@ -1,16 +1,33 @@
 <!doctype html><html><head><script type="text/javascript">
 
-function make_repl({evaluator, t, h, r}) {
 
-  const uEval = evaluator || eval;
-  
+
+
+
+function default_formatter(item) {
+  const pre     = document.createElement('pre');
+  pre.innerHTML = JSON.stringify(item, undefined, 2);
+  return pre;
+}
+
+
+
+
+
+function make_repl({evaluator, target, logger, formatter, r}) {
+
+  const uTarget    = target    || document.body,
+        uFormatter = formatter || default_formatter,
+        uLogger    = logger    || function (item) { uTarget.appendChild(uFormatter(item)); },
+        uEval      = evaluator || eval;
+
   // history
-  h = [t || ''];
+  let h = [];
 
   // loop until blank input or cancel
   // print last 10 reults
 
-  while (s = prompt(h.slice(-10).join('\n'))) {
+  while (s = prompt(JSON.stringify(h.slice(-10)))) {
 
     // eval the input, coerce to string, push onto history
     // TODO: JSON.stringify() or other pretty printing?
@@ -21,12 +38,17 @@ function make_repl({evaluator, t, h, r}) {
       r = e;
     }
 
-    h.push( JSON.stringify(r) );
+    h.push({ query: s, result: r });
+    uLogger(r);
 
   }
 
 }
 
-make_repl({});
+
+
+
+
+window.onload = function() { make_repl({}); }
 
 </script></head><body></body></html>
